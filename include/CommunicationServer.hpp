@@ -29,6 +29,8 @@ private:
 
 	void createAlphabetTableHeader();
 	void fillActionMap();
+	void RemoveDoubleEntries(std::unordered_map<std::string, int> &nextPossibleActions);
+	void PrintNextActions(std::unordered_map<std::string, int> nextPossibleActions);
 };
 
 #endif /* MY_CLASS_H */

@@ -18,6 +18,7 @@ void CommunicationServer::init()
 	fillActionMap();
 }
 
+
 void CommunicationServer::createAlphabetTableHeader()
 {
 	_allActions.clear();
@@ -100,6 +101,14 @@ void CommunicationServer::getNextPossibleActions()
 		}
 	}
 
+	RemoveDoubleEntries(nextPossibleActions); 
+	PrintNextActions(nextPossibleActions);
+
+}
+
+
+void CommunicationServer::RemoveDoubleEntries(std::unordered_map<std::string, int> &nextPossibleActions)
+{
 	for (auto it = nextPossibleActions.begin(); it != nextPossibleActions.end();)
 	{
 		if (_allActionsMap.find(it->first)->second != it->second)
@@ -112,7 +121,10 @@ void CommunicationServer::getNextPossibleActions()
 			++it;
 		}
 	}
+}
 
+void CommunicationServer::PrintNextActions(std::unordered_map<std::string, int> nextPossibleActions)
+{
 	std::cout << "Next possible transitions:[ ";
 	for (auto &x : nextPossibleActions)
 	{
@@ -120,6 +132,7 @@ void CommunicationServer::getNextPossibleActions()
 	}
 	std::cout << " ]\n";
 }
+
 
 void CommunicationServer::makeTransition(std::string requestedAction)
 {
