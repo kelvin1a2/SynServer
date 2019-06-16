@@ -15,7 +15,6 @@ CommunicationServer::~CommunicationServer()
 void CommunicationServer::init()
 {
 	createAlphabetTableHeader();
-	fillActionMap();
 }
 
 
@@ -27,33 +26,21 @@ void CommunicationServer::createAlphabetTableHeader()
 	{
 		for (auto &alpha : proc->getAlphabet())
 		{
+			// When action already defined, add 
 			if (std::find(_allActions.begin(), _allActions.end(), alpha) != _allActions.end())
 			{
-				continue;
+				_allActionsMap[alpha]++;
 			}
+			// When action not defined, add entry in map and allAction list  
 			else
 			{
-				_allActionsMap[alpha] = 0;
+				_allActionsMap[alpha] = 1;
 				_allActions.push_back(alpha);
 			}
 		}
 	}
 }
 
-void CommunicationServer::fillActionMap()
-{
-	for (auto &proc : _vProcesses)
-	{
-		std::vector<std::string> alphabet = proc->getAlphabet();
-		for (auto &action : _allActions)
-		{
-			if (std::find(alphabet.begin(), alphabet.end(), action) != alphabet.end())
-			{
-				_allActionsMap[action]++;
-			}
-		}
-	}
-}
 
 void CommunicationServer::addProcess(Process *p)
 {
@@ -82,38 +69,37 @@ void CommunicationServer::getSensitiveLists()
 void CommunicationServer::getNextPossibleActions()
 {
 	nextPossibleActions.clear();
-
-	//loop trough all processes
-	for (auto proc : _vProcesses)
+	for (auto pairOfMap : _mSensitivityLists)
 	{
-		//
-		for (auto s : _mSensitivityLists[proc->getName()])
+		// pairOfMap.second = Action 
+		for (auto sensitveAction : pairOfMap.second)
 		{
-			//if not found insert into next possible actions list
-			if (nextPossibleActions.find(s) == nextPossibleActions.end())
+			//if action not found earlier, insert action into next possible actions list. 
+			if (nextPossibleActions.find(sensitveAction) == nextPossibleActions.end())
 			{
-				nextPossibleActions.insert(std::pair<std::string, int>(s, 1));
+				nextPossibleActions.insert(std::pair<std::string, int>(sensitveAction, 1));
 			}
 			else //else count up number of occurrences
 			{
-				nextPossibleActions[s]++;
+				nextPossibleActions[sensitveAction]++;
 			}
 		}
 	}
-
-	RemoveDoubleEntries(nextPossibleActions); 
+	
+	// niet de dubbele entries, maar de gene die niet mogen... 
+	RemoveDoubleEntries(nextPossibleActions);  
 	PrintNextActions(nextPossibleActions);
-
 }
 
 
 void CommunicationServer::RemoveDoubleEntries(std::unordered_map<std::string, int> &nextPossibleActions)
 {
+	// Iterate over each possible Action 
 	for (auto it = nextPossibleActions.begin(); it != nextPossibleActions.end();)
 	{
+		// If number of sensitive entries is not equal to second number of expected sensitve entries, remove it, because it is not allowed. 
 		if (_allActionsMap.find(it->first)->second != it->second)
 		{
-
 			it = nextPossibleActions.erase(it);
 		}
 		else

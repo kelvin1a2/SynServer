@@ -195,7 +195,6 @@ int main()
 		//std::cout << input;
 		communicationserver.makeTransition(input);
 		communicationserver.getSensitiveLists();
-
 		// getNextPossibleActions()
 		communicationserver.getNextPossibleActions();
 	}
