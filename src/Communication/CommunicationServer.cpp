@@ -122,6 +122,8 @@ void CommunicationServer::PrintNextActions(std::unordered_map<std::string, int> 
 
 void CommunicationServer::makeTransition(std::string requestedAction)
 {
+
+	// add list of process that changed, and only asked new sensitivty list for that processes.. 
 	for (auto proc : _vProcesses)
 	{
 		for (auto const &sensitiveAction : _mSensitivityLists[proc->getName()])
