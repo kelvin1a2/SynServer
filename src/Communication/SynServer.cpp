@@ -16,45 +16,42 @@ void SynServer::init()
 {
 	// Map action + required occurences (for synchronisatie), and a vector with all actions
 	// 
-	createAlphabetTableHeader();
+	createStateTable();
 	updateSensitiveLists();
 }
 
 
-void SynServer::createAlphabetTableHeader()
+void SynServer::createStateTable()
 {
-	_allActions.clear();
-	// _all actions vector not needed?? 
-
-	for (auto &proc : _vProcesses)
+	for (auto &proc : _vThreads)
 	{
 		for (auto &alpha : proc->getAlphabet())
 		{
-			// When action already defined, add 
-			if (std::find(_allActions.begin(), _allActions.end(), alpha) != _allActions.end())
-			{
-				_allActionsMap[alpha]++;
-			}
-			// When action not defined, add entry in map and allAction list  
-			else
+			// dd
+			if (_allActionsMap.find(alpha) == _allActionsMap.end()) 
 			{
 				_allActionsMap[alpha] = 1;
-				_allActions.push_back(alpha);
 			}
+			else
+			{
+				_allActionsMap[alpha]++;
+				
+			}
+			
 		}
 	}
 }
 
 
-void SynServer::addProcess(Thread *p)
+void SynServer::addThread(Thread *p)
 {
-	_vProcesses.push_back(p);
+	_vThreads.push_back(p);
 }
 
-void SynServer::printProcesses()
+void SynServer::printThreads()
 {
 	//for debugging purposes
-	for (auto proc : _vProcesses)
+	for (auto proc : _vThreads)
 	{
 		std::cout << proc->getName();
 	}
@@ -63,22 +60,22 @@ void SynServer::printProcesses()
 
 void SynServer::updateSensitiveLists()
 {
-	// First time check all processes 
+	// First time check all threads 
 	if(_mSensitivityLists.empty())
 	{
-		for (auto proc : _vProcesses)
+		for (auto proc : _vThreads)
 		{
 			_mSensitivityLists[proc->getName()] = proc->getSensitivityList();
 		}
 	}
-	else // only check process which has made changes in FSM (optimized)
+	else // only check threads which has made changes in FSM (optimized)
 	{
-		for (auto proc : _changedProcess)
+		for (auto proc : _changedThreads)
 		{
 			_mSensitivityLists[proc->getName()] = proc->getSensitivityList();
 		}
 	}
-	_changedProcess.clear(); 
+	_changedThreads.clear(); 
 }
 
 void SynServer::getNextPossibleActions()
@@ -141,14 +138,14 @@ void SynServer::PrintNextActions(std::unordered_map<std::string, int> nextPossib
 void SynServer::makeTransition(std::string requestedAction)
 {
 
-	// add list of process that changed, and only asked new sensitivty list for that processes.. 
-	for (auto proc : _vProcesses)
+	// add list of Thread that changed, and only asked new sensitivty list for that Threades.. 
+	for (auto proc : _vThreads)
 	{
 		for (auto const &sensitiveAction : _mSensitivityLists[proc->getName()])
 		{
 			if (sensitiveAction == requestedAction)
 			{
-				_changedProcess.push_back(proc); 
+				_changedThreads.push_back(proc); 
 				proc->makeTransition(sensitiveAction);
 			}
 		}

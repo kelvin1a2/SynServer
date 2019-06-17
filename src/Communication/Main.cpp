@@ -175,7 +175,7 @@ int main()
 	procs.push_back(proc7);
 	for (auto& proc : procs)
 	{
-		SynServer.addProcess(&proc);
+		SynServer.addThread(&proc);
 	}
 	SynServer.init();
 	SynServer.getNextPossibleActions();
