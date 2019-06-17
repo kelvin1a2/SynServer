@@ -14,12 +14,13 @@ public:
 	void printProcesses();
 	void nextState(int);
 	void init();
-	void getSensitiveLists();
+	void updateSensitiveLists();
 	void getNextPossibleActions();
 	void makeTransition(std::string trans);
 
 private:
 	std::vector<std::string> _allActions;
+	std::vector<Process *> _changedProcess;
 	std::vector<Process *> _vProcesses;
 	//std::vector<std::vector<int>> _stateTable;
 	char **_lookUpTable;

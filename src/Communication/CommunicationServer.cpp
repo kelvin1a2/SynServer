@@ -15,6 +15,7 @@ CommunicationServer::~CommunicationServer()
 void CommunicationServer::init()
 {
 	createAlphabetTableHeader();
+	updateSensitiveLists();
 }
 
 
@@ -57,18 +58,31 @@ void CommunicationServer::printProcesses()
 	printf("\n");
 }
 
-void CommunicationServer::getSensitiveLists()
+void CommunicationServer::updateSensitiveLists()
 {
-	//get all the the sensitivity lists and map them.
-	for (auto proc : _vProcesses)
+	// First time check all processes 
+	if(_mSensitivityLists.empty())
 	{
-		_mSensitivityLists[proc->getName()] = proc->getSensitivityList();
+		for (auto proc : _vProcesses)
+		{
+			_mSensitivityLists[proc->getName()] = proc->getSensitivityList();
+		}
 	}
+	else // only check process which has made changes in FSM (optimized)
+	{
+		for (auto proc : _changedProcess)
+		{
+			_mSensitivityLists[proc->getName()] = proc->getSensitivityList();
+		}
+	}
+	_changedProcess.clear(); 
 }
 
 void CommunicationServer::getNextPossibleActions()
 {
 	nextPossibleActions.clear();
+
+	// Count actions
 	for (auto pairOfMap : _mSensitivityLists)
 	{
 		// pairOfMap.second = Action 
@@ -87,6 +101,7 @@ void CommunicationServer::getNextPossibleActions()
 	}
 	
 	// niet de dubbele entries, maar de gene die niet mogen... 
+	// DO your synchronizing... 
 	RemoveDoubleEntries(nextPossibleActions);  
 	PrintNextActions(nextPossibleActions);
 }
@@ -126,12 +141,15 @@ void CommunicationServer::makeTransition(std::string requestedAction)
 	// add list of process that changed, and only asked new sensitivty list for that processes.. 
 	for (auto proc : _vProcesses)
 	{
+			
 		for (auto const &sensitiveAction : _mSensitivityLists[proc->getName()])
 		{
 			if (sensitiveAction == requestedAction)
 			{
+				_changedProcess.push_back(proc); 
 				proc->makeTransition(sensitiveAction);
 			}
 		}
 	}
+	updateSensitiveLists();
 }

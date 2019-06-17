@@ -180,7 +180,7 @@ int main()
 		communicationserver.addProcess(&proc);
 	}
 	communicationserver.init();
-	communicationserver.getSensitiveLists();
+	//communicationserver.updateSensitiveLists();
 	communicationserver.getNextPossibleActions();
 
 	// start loop here
@@ -194,7 +194,7 @@ int main()
 		// make transistion
 		//std::cout << input;
 		communicationserver.makeTransition(input);
-		communicationserver.getSensitiveLists();
+		//communicationserver.updateSensitiveLists();
 		// getNextPossibleActions()
 		communicationserver.getNextPossibleActions();
 	}
