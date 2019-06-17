@@ -28,13 +28,13 @@ void SynServer::createStateTable()
 		for (auto &alpha : proc->getAlphabet())
 		{
 			// dd
-			if (_allActionsMap.find(alpha) == _allActionsMap.end()) 
+			if (_mAllActions.find(alpha) == _mAllActions.end()) 
 			{
-				_allActionsMap[alpha] = 1;
+				_mAllActions[alpha] = 1;
 			}
 			else
 			{
-				_allActionsMap[alpha]++;
+				_mAllActions[alpha]++;
 				
 			}
 			
@@ -70,17 +70,17 @@ void SynServer::updateSensitiveLists()
 	}
 	else // only check threads which has made changes in FSM (optimized)
 	{
-		for (auto proc : _changedThreads)
+		for (auto proc : _vChangedThreads)
 		{
 			_mSensitivityLists[proc->getName()] = proc->getSensitivityList();
 		}
 	}
-	_changedThreads.clear(); 
+	_vChangedThreads.clear(); 
 }
 
-void SynServer::getNextPossibleActions()
+void SynServer::getNextActions()
 {
-	nextPossibleActions.clear();
+	_mNextActions.clear();
 
 	// Count actions
 	for (auto pairOfMap : _mSensitivityLists)
@@ -89,33 +89,32 @@ void SynServer::getNextPossibleActions()
 		for (auto sensitveAction : pairOfMap.second)
 		{
 			//if action not found earlier, insert action into next possible actions list. 
-			if (nextPossibleActions.find(sensitveAction) == nextPossibleActions.end())
+			if (_mNextActions.find(sensitveAction) == _mNextActions.end())
 			{
-				nextPossibleActions.insert(std::pair<std::string, int>(sensitveAction, 1));
+				_mNextActions.insert(std::pair<std::string, int>(sensitveAction, 1));
 			}
 			else //else count up number of occurrences
 			{
-				nextPossibleActions[sensitveAction]++;
+				_mNextActions[sensitveAction]++;
 			}
 		}
 	}
 	
-	// niet de dubbele entries, maar de gene die niet mogen... 
 	// DO your synchronizing... 
-	RemoveDoubleEntries(nextPossibleActions);  
-	PrintNextActions(nextPossibleActions);
+	removeUnsynchronisedActions(_mNextActions);  
+	printNextActions(_mNextActions);
 }
 
 
-void SynServer::RemoveDoubleEntries(std::unordered_map<std::string, int> &nextPossibleActions)
+void SynServer::removeUnsynchronisedActions(std::unordered_map<std::string, int> &_mNextActions)
 {
 	// Iterate over each possible Action 
-	for (auto it = nextPossibleActions.begin(); it != nextPossibleActions.end();)
+	for (auto it = _mNextActions.begin(); it != _mNextActions.end();)
 	{
 		// If number of sensitive entries is not equal to second number of expected sensitve entries, remove it, because it is not allowed. 
-		if (_allActionsMap.find(it->first)->second != it->second)
+		if (_mAllActions.find(it->first)->second != it->second)
 		{
-			it = nextPossibleActions.erase(it);
+			it = _mNextActions.erase(it);
 		}
 		else
 		{
@@ -124,10 +123,10 @@ void SynServer::RemoveDoubleEntries(std::unordered_map<std::string, int> &nextPo
 	}
 }
 
-void SynServer::PrintNextActions(std::unordered_map<std::string, int> nextPossibleActions)
+void SynServer::printNextActions(std::unordered_map<std::string, int> _mNextActions)
 {
 	std::cout << "Next possible transitions:[ ";
-	for (auto &x : nextPossibleActions)
+	for (auto &x : _mNextActions)
 	{
 		std::cout << x.first << ' ';
 	}
@@ -145,7 +144,7 @@ void SynServer::makeTransition(std::string requestedAction)
 		{
 			if (sensitiveAction == requestedAction)
 			{
-				_changedThreads.push_back(proc); 
+				_vChangedThreads.push_back(proc); 
 				proc->makeTransition(sensitiveAction);
 			}
 		}

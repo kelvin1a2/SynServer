@@ -1,5 +1,4 @@
-// my_class.h
-#ifndef SYNSERVER_H // include guard
+#ifndef SYNSERVER_H 
 #define SYNSERVER_H
 #include <vector>
 #include <unordered_map>
@@ -12,25 +11,21 @@ public:
 	~SynServer();
 	void addThread(Thread *p);
 	void printThreads();
-	void nextState(int);
 	void init();
-	void updateSensitiveLists();
-	void getNextPossibleActions();
+	void getNextActions();
 	void makeTransition(std::string trans);
 
 private:
-	std::vector<Thread *> _changedThreads;
+	std::vector<Thread *> _vChangedThreads;
 	std::vector<Thread *> _vThreads;
-
-	char **_lookUpTable;
 	std::unordered_map<std::string, std::vector<std::string>> _mSensitivityLists;
-	std::unordered_map<std::string, int> nextPossibleActions;
-	std::unordered_map<std::string, int> _allActionsMap;
+	std::unordered_map<std::string, int> _mNextActions;
+	std::unordered_map<std::string, int> _mAllActions;
 
+	void updateSensitiveLists();
 	void createStateTable();
-	void fillActionMap();
-	void RemoveDoubleEntries(std::unordered_map<std::string, int> &nextPossibleActions);
-	void PrintNextActions(std::unordered_map<std::string, int> nextPossibleActions);
+	void removeUnsynchronisedActions(std::unordered_map<std::string, int> &_mNextActions);
+	void printNextActions(std::unordered_map<std::string, int> _mNextActions);
 };
 
-#endif /* MY_CLASS_H */
+#endif 

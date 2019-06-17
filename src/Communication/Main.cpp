@@ -178,7 +178,7 @@ int main()
 		SynServer.addThread(&proc);
 	}
 	SynServer.init();
-	SynServer.getNextPossibleActions();
+	SynServer.getNextActions();
 
 	// start loop here
 	while (true)
@@ -191,7 +191,7 @@ int main()
 		// make transistion
 		//std::cout << input;
 		SynServer.makeTransition(input);
-		SynServer.getNextPossibleActions();
+		SynServer.getNextActions();
 	}
 
 	return 1;
