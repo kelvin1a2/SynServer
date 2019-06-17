@@ -12,15 +12,14 @@ public:
 	void printAlphabet();
 	std::string getName();
 	std::vector<std::string> getAlphabet();
-	std::vector<std::string> getSensitivityList();
+	std::vector<std::string> getSensitiviteActions();
 	void makeTransition(std::string trans);
 
 private:
 	int **_FSM;
 	int _currentState;
-	int _nstates;
-	std::vector<std::string> _alphabet;
-	std::vector<std::string> _sensitivityList;
+	std::vector<std::string> _vAlphabet;
+	std::vector<std::string> _vSensitivityList;
 	std::string _name;
 };
 

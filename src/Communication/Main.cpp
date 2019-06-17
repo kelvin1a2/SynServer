@@ -5,14 +5,6 @@
 
 //using namespace std;
 
-enum class states
-{
-	WRITE = 1,
-	READ,
-	BW,
-	ERROR = -1
-};
-
 int **LSchouderP;
 int **RSchouderP;
 int **LSchouderR;
@@ -98,21 +90,21 @@ void initProcs()
 		}
 	}
 	
-	ToReady[0][0] = 1;
-	ToReady[1][1] = 2;
-	ToReady[2][2] = 3;
-	ToReady[2][3] = 4;
-	ToReady[3][4] = 0;
-	ToReady[4][5] = 5;
-	ToReady[5][6] = 2;
-	for (int i = 0; i < 6; i++)
-	{
-		for (int j = 0; j < 7; j++)
-		{
-			std::cout << " | "<< ToReady[i][j];
-		}
-		std::cout << '\n';
-	}
+	// ToReady[0][0] = 1;
+	// ToReady[1][1] = 2;
+	// ToReady[2][2] = 3;
+	// ToReady[2][3] = 4;
+	// ToReady[3][4] = 0;
+	// ToReady[4][5] = 5;
+	// ToReady[5][6] = 2;
+	// for (int i = 0; i < 6; i++)
+	// {
+	// 	for (int j = 0; j < 7; j++)
+	// 	{
+	// 		std::cout << " | "<< ToReady[i][j];
+	// 	}
+	// 	std::cout << '\n';
+	// }
 	//ToReady[5][3] = 2;
 
 }
@@ -185,11 +177,8 @@ int main()
 	{
 		// enter number
 		std::string input = "";
-		std::cout << "Please enter an string value: ";
+		std::cout << "Please enter a value: ";
 		getline(std::cin, input);
-		//std::cin >> i;
-		// make transistion
-		//std::cout << input;
 		SynServer.makeTransition(input);
 		SynServer.getNextActions();
 	}

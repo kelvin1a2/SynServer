@@ -35,13 +35,11 @@ void SynServer::createStateTable()
 			else
 			{
 				_mAllActions[alpha]++;
-				
 			}
 			
 		}
 	}
 }
-
 
 void SynServer::addThread(Thread *p)
 {
@@ -65,17 +63,18 @@ void SynServer::updateSensitiveLists()
 	{
 		for (auto proc : _vThreads)
 		{
-			_mSensitivityLists[proc->getName()] = proc->getSensitivityList();
+			_mSensitivityLists[proc->getName()] = proc->getSensitiviteActions();
 		}
 	}
 	else // only check threads which has made changes in FSM (optimized)
 	{
 		for (auto proc : _vChangedThreads)
 		{
-			_mSensitivityLists[proc->getName()] = proc->getSensitivityList();
+			_mSensitivityLists[proc->getName()] = proc->getSensitiviteActions();
 		}
+		_vChangedThreads.clear(); 
 	}
-	_vChangedThreads.clear(); 
+	
 }
 
 void SynServer::getNextActions()
@@ -136,8 +135,7 @@ void SynServer::printNextActions(std::unordered_map<std::string, int> _mNextActi
 
 void SynServer::makeTransition(std::string requestedAction)
 {
-
-	// add list of Thread that changed, and only asked new sensitivty list for that Threades.. 
+	// add list of Thread that changed, and only asked new sensitivty list for that Threads.. 
 	for (auto proc : _vThreads)
 	{
 		for (auto const &sensitiveAction : _mSensitivityLists[proc->getName()])

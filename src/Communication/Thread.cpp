@@ -20,14 +20,14 @@ void Thread::addAlphabet(std::vector<std::string> alphabet)
 {
 	for (const auto alpha : alphabet)
 	{
-		_alphabet.push_back(alpha);
+		_vAlphabet.push_back(alpha);
 	}
 }
 
 void Thread::printAlphabet()
 {
 	//for debugging purposes
-	for (const auto alpha : _alphabet)
+	for (const auto alpha : _vAlphabet)
 	{
 		std::cout << alpha << ' ';
 	}
@@ -36,7 +36,7 @@ void Thread::printAlphabet()
 
 std::vector<std::string> Thread::getAlphabet()
 {
-	return _alphabet;
+	return _vAlphabet;
 }
 
 std::string Thread::getName()
@@ -44,18 +44,18 @@ std::string Thread::getName()
 	return _name;
 }
 
-std::vector<std::string> Thread::getSensitivityList()
+std::vector<std::string> Thread::getSensitiviteActions()
 {
-	_sensitivityList.clear();
-	for (int i = 0; i < _alphabet.size(); ++i)
+	_vSensitivityList.clear();
+	for (int i = 0; i < _vAlphabet.size(); ++i)
 	{
 		if (_FSM[_currentState][i] != -1)
 		{
-			_sensitivityList.push_back(_alphabet.at(i));
+			_vSensitivityList.push_back(_vAlphabet.at(i));
 		}
 	}
 
-	return _sensitivityList;
+	return _vSensitivityList;
 }
 
 void Thread::makeTransition(std::string requestedAction)
@@ -63,13 +63,13 @@ void Thread::makeTransition(std::string requestedAction)
 	//kijk in statetable
 	//verhoog current state
 	//Find given element in vector
-	auto it = std::find(_alphabet.begin(), _alphabet.end(), requestedAction);
+	auto it = std::find(_vAlphabet.begin(), _vAlphabet.end(), requestedAction);
 	int FSMIndex;
 
-	if (it != _alphabet.end())
+	if (it != _vAlphabet.end())
 	{
-		//find position in alphabet
-		FSMIndex = std::distance(_alphabet.begin(), it);
+		// find position in alphabet
+		FSMIndex = std::distance(_vAlphabet.begin(), it);
 		_currentState = _FSM[_currentState][FSMIndex];
 	}
 }
