@@ -1,22 +1,22 @@
-#include "Process.hpp"
+#include "Thread.hpp"
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <iterator>
 
-Process::Process(std::string name, int **FSM)
+Thread::Thread(std::string name, int **FSM)
 {
 	_name = name;
 	_FSM = FSM;
-	//process should always start in its 0 state
+	//Thread should always start in its 0 state
 	_currentState = 0;
 }
 
-Process::~Process()
+Thread::~Thread()
 {
 }
 
-void Process::addAlphabet(std::vector<std::string> alphabet)
+void Thread::addAlphabet(std::vector<std::string> alphabet)
 {
 	for (const auto alpha : alphabet)
 	{
@@ -24,7 +24,7 @@ void Process::addAlphabet(std::vector<std::string> alphabet)
 	}
 }
 
-void Process::printAlphabet()
+void Thread::printAlphabet()
 {
 	//for debugging purposes
 	for (const auto alpha : _alphabet)
@@ -34,17 +34,17 @@ void Process::printAlphabet()
 	std::cout << '\n';
 }
 
-std::vector<std::string> Process::getAlphabet()
+std::vector<std::string> Thread::getAlphabet()
 {
 	return _alphabet;
 }
 
-std::string Process::getName()
+std::string Thread::getName()
 {
 	return _name;
 }
 
-std::vector<std::string> Process::getSensitivityList()
+std::vector<std::string> Thread::getSensitivityList()
 {
 	_sensitivityList.clear();
 	for (int i = 0; i < _alphabet.size(); ++i)
@@ -58,7 +58,7 @@ std::vector<std::string> Process::getSensitivityList()
 	return _sensitivityList;
 }
 
-void Process::makeTransition(std::string requestedAction)
+void Thread::makeTransition(std::string requestedAction)
 {
 	//kijk in statetable
 	//verhoog current state

@@ -1,16 +1,16 @@
 // my_class.h
-#ifndef COMMUNICATIONSERVER_H // include guard
-#define COMMUNICATIONSERVER_H
+#ifndef SYNSERVER_H // include guard
+#define SYNSERVER_H
 #include <vector>
 #include <unordered_map>
-#include "Process.hpp"
+#include "Thread.hpp"
 
-class CommunicationServer
+class SynServer
 {
 public:
-	CommunicationServer();
-	~CommunicationServer();
-	void addProcess(Process *p);
+	SynServer();
+	~SynServer();
+	void addProcess(Thread *p);
 	void printProcesses();
 	void nextState(int);
 	void init();
@@ -20,8 +20,8 @@ public:
 
 private:
 	std::vector<std::string> _allActions;
-	std::vector<Process *> _changedProcess;
-	std::vector<Process *> _vProcesses;
+	std::vector<Thread *> _changedProcess;
+	std::vector<Thread *> _vProcesses;
 	//std::vector<std::vector<int>> _stateTable;
 	char **_lookUpTable;
 	std::unordered_map<std::string, std::vector<std::string>> _mSensitivityLists;

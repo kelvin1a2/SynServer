@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
-#include "Process.hpp"
-#include "CommunicationServer.hpp"
+#include "Thread.hpp"
+#include "SynServer.hpp"
 
 //using namespace std;
 
@@ -105,61 +105,59 @@ void initProcs()
 	ToReady[3][4] = 0;
 	ToReady[4][5] = 5;
 	ToReady[5][6] = 2;
-	//for (int i = 0; i < 6; i++)
-	//{
-	//	for (int j = 0; j < 7; j++)
-	//	{
-	//		std::cout << " | "<< ToReady[i][j];
-	//	}
-	//	std::cout << '\n';
-	//}
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 7; j++)
+		{
+			std::cout << " | "<< ToReady[i][j];
+		}
+		std::cout << '\n';
+	}
 	//ToReady[5][3] = 2;
 
 }
 
 
-
-
 int main()
 {
 
-	CommunicationServer communicationserver;
+	SynServer SynServer;
 
 	initProcs();
-	std::vector<Process> procs;
+	std::vector<Thread> procs;
 	std::vector<std::string> alphabet;
 	alphabet.push_back("schouderPomhoog");
 	alphabet.push_back("schouderPomlaag");
 
 	//maybe alphabet.size() can be buggy, need research
-	Process proc("LSchouderP", LSchouderP);
+	Thread proc("LSchouderP", LSchouderP);
 	// proc.addAlphabet(alphabet);
 
 	procs.push_back(proc);
 
-	Process proc2("RSchouderP", RSchouderP);
+	Thread proc2("RSchouderP", RSchouderP);
 	proc2.addAlphabet(alphabet);
 	procs.push_back(proc2);
 
 	alphabet.clear();
 	alphabet.push_back("schouderRomhoog");
 	alphabet.push_back("schouderRomlaag");
-	Process proc3("LSchouderR", LSchouderR);
+	Thread proc3("LSchouderR", LSchouderR);
 	proc3.addAlphabet(alphabet);
 	procs.push_back(proc3);
 
-	Process proc4("RSchouderR", RSchouderR);
+	Thread proc4("RSchouderR", RSchouderR);
 	proc4.addAlphabet(alphabet);
 	procs.push_back(proc4);
 
 	alphabet.clear();
 	alphabet.push_back("elleboogOmhoog");
 	alphabet.push_back("elleboogOmlaag");
-	Process proc5("Lelleboog", Lelleboog);
+	Thread proc5("Lelleboog", Lelleboog);
 	proc5.addAlphabet(alphabet);
 	procs.push_back(proc5);
 
-	Process proc6("Relleboog", Relleboog);
+	Thread proc6("Relleboog", Relleboog);
 	proc6.addAlphabet(alphabet);
 	procs.push_back(proc6);
 	alphabet.clear();
@@ -171,17 +169,16 @@ int main()
 	alphabet.push_back("schouderRomhoog");
 	alphabet.push_back("schouderRomlaag");
 	
-	Process proc7("ToReady", ToReady);
+	Thread proc7("ToReady", ToReady);
 	
 	proc7.addAlphabet(alphabet);
 	procs.push_back(proc7);
 	for (auto& proc : procs)
 	{
-		communicationserver.addProcess(&proc);
+		SynServer.addProcess(&proc);
 	}
-	communicationserver.init();
-	//communicationserver.updateSensitiveLists();
-	communicationserver.getNextPossibleActions();
+	SynServer.init();
+	SynServer.getNextPossibleActions();
 
 	// start loop here
 	while (true)
@@ -193,10 +190,8 @@ int main()
 		//std::cin >> i;
 		// make transistion
 		//std::cout << input;
-		communicationserver.makeTransition(input);
-		//communicationserver.updateSensitiveLists();
-		// getNextPossibleActions()
-		communicationserver.getNextPossibleActions();
+		SynServer.makeTransition(input);
+		SynServer.getNextPossibleActions();
 	}
 
 	return 1;

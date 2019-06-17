@@ -1,27 +1,30 @@
-#include "CommunicationServer.hpp"
-#include "Process.hpp"
+#include "SynServer.hpp"
+#include "Thread.hpp"
 #include <iostream>
 #include <algorithm>
 #include <iterator> // std::iterator, std::input_iterator_tag
 
-CommunicationServer::CommunicationServer()
+SynServer::SynServer()
 {
 }
 
-CommunicationServer::~CommunicationServer()
+SynServer::~SynServer()
 {
 }
 
-void CommunicationServer::init()
+void SynServer::init()
 {
+	// Map action + required occurences (for synchronisatie), and a vector with all actions
+	// 
 	createAlphabetTableHeader();
 	updateSensitiveLists();
 }
 
 
-void CommunicationServer::createAlphabetTableHeader()
+void SynServer::createAlphabetTableHeader()
 {
 	_allActions.clear();
+	// _all actions vector not needed?? 
 
 	for (auto &proc : _vProcesses)
 	{
@@ -43,12 +46,12 @@ void CommunicationServer::createAlphabetTableHeader()
 }
 
 
-void CommunicationServer::addProcess(Process *p)
+void SynServer::addProcess(Thread *p)
 {
 	_vProcesses.push_back(p);
 }
 
-void CommunicationServer::printProcesses()
+void SynServer::printProcesses()
 {
 	//for debugging purposes
 	for (auto proc : _vProcesses)
@@ -58,7 +61,7 @@ void CommunicationServer::printProcesses()
 	printf("\n");
 }
 
-void CommunicationServer::updateSensitiveLists()
+void SynServer::updateSensitiveLists()
 {
 	// First time check all processes 
 	if(_mSensitivityLists.empty())
@@ -78,7 +81,7 @@ void CommunicationServer::updateSensitiveLists()
 	_changedProcess.clear(); 
 }
 
-void CommunicationServer::getNextPossibleActions()
+void SynServer::getNextPossibleActions()
 {
 	nextPossibleActions.clear();
 
@@ -107,7 +110,7 @@ void CommunicationServer::getNextPossibleActions()
 }
 
 
-void CommunicationServer::RemoveDoubleEntries(std::unordered_map<std::string, int> &nextPossibleActions)
+void SynServer::RemoveDoubleEntries(std::unordered_map<std::string, int> &nextPossibleActions)
 {
 	// Iterate over each possible Action 
 	for (auto it = nextPossibleActions.begin(); it != nextPossibleActions.end();)
@@ -124,7 +127,7 @@ void CommunicationServer::RemoveDoubleEntries(std::unordered_map<std::string, in
 	}
 }
 
-void CommunicationServer::PrintNextActions(std::unordered_map<std::string, int> nextPossibleActions)
+void SynServer::PrintNextActions(std::unordered_map<std::string, int> nextPossibleActions)
 {
 	std::cout << "Next possible transitions:[ ";
 	for (auto &x : nextPossibleActions)
@@ -135,13 +138,12 @@ void CommunicationServer::PrintNextActions(std::unordered_map<std::string, int> 
 }
 
 
-void CommunicationServer::makeTransition(std::string requestedAction)
+void SynServer::makeTransition(std::string requestedAction)
 {
 
 	// add list of process that changed, and only asked new sensitivty list for that processes.. 
 	for (auto proc : _vProcesses)
 	{
-			
 		for (auto const &sensitiveAction : _mSensitivityLists[proc->getName()])
 		{
 			if (sensitiveAction == requestedAction)

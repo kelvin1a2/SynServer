@@ -1,14 +1,13 @@
-#ifndef PROCESS_H // include guard
-#define PROCESS_H
+#ifndef THREAD_H // include guard
+#define THREAD_H
 #include <vector>
 #include <map>
-//class CommunicationServer;
 
-class Process
+class Thread
 {
 public:
-	Process(std::string name, int **FSM);
-	~Process();
+	Thread(std::string name, int **FSM);
+	~Thread();
 	void addAlphabet(std::vector<std::string> alpahbet);
 	void printAlphabet();
 	std::string getName();
