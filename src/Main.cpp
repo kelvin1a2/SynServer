@@ -90,13 +90,14 @@ void initProcs()
 		}
 	}
 	
-	// ToReady[0][0] = 1;
-	// ToReady[1][1] = 2;
-	// ToReady[2][2] = 3;
-	// ToReady[2][3] = 4;
-	// ToReady[3][4] = 0;
-	// ToReady[4][5] = 5;
-	// ToReady[5][6] = 2;
+	ToReady[0][0] = 1;
+	ToReady[1][1] = 2;
+	ToReady[2][2] = 3;
+	ToReady[2][3] = 4;
+	ToReady[3][4] = 0;
+	ToReady[4][5] = 5;
+	ToReady[5][6] = 2;
+
 	// for (int i = 0; i < 6; i++)
 	// {
 	// 	for (int j = 0; j < 7; j++)
@@ -123,7 +124,7 @@ int main()
 
 	//maybe alphabet.size() can be buggy, need research
 	Thread proc("LSchouderP", LSchouderP);
-	// proc.addAlphabet(alphabet);
+	proc.addAlphabet(alphabet);
 
 	procs.push_back(proc);
 
